@@ -20,12 +20,6 @@ function getRating(score: number): StargazingRating {
 }
 
 
-
-
-
-
-
-
 // Main Score
 export function calculateScore(weather: WeatherInfo, moon: MoonInfo): Score {
   let score = 100;

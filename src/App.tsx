@@ -1,29 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { WeatherInfo, MoonInfo } from './types/stargazing';
 import { calculateScore } from './utils/stargazingScorer';
+import { fetchWeather } from './services/weatherService';
 import './App.css'
 
 function App() {
-  const [cloudCover, setCloudCover] = useState<number>(10);
-  const weather: WeatherInfo = {
-    cloudCover: cloudCover,
-    precipitationChance: 5,
-    temperatureCelsius: 14,
-    temperatureFarenheit: 57
-  };
+  const [weather, setWeather] = useState<WeatherInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchWeather(49.2497, -123.1193)
+      .then((data) => {
+        setWeather(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
+  
   const moon: MoonInfo = {
     currPhase: "Waxing Crescent",
     illumination: 0.15,
     moonRise: "6:30 PM",
     moonSet: "11:15 PM"
   };
-
+  if (loading || !weather) {
+    return (
+      <main style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'sans-serif', padding: '20px' }}>
+        <h1>Eris</h1>
+        <p style={{ color: '#aaa' }}>Scanning the skies for tonight's forecast...</p>
+      </main>
+    );
+  }
+  
+  // Below this 'if', TypeScript now KNOWS weather is 100% not null!
+  
   const result = calculateScore(weather, moon);
 
   
   return (
     <main style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'sans-serif', padding: '20px' }}>
-      <h1>Project Eris</h1>
+      <h1>Eris</h1>
       <p style={{ color: '#888' }}>Tonight's Stargazing Forecast</p>
 
       {/* Score Card */}
@@ -38,7 +57,7 @@ function App() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: '48px', fontWeight: 'bold' }}>{result.score}</div>
-            <div style={{ color: '#aaa', fontSize: '14px' }}>Stargazing Index / 100</div>
+            <div style={{ color: '#aaa', fontSize: '14px' }}>Stargazing Index</div>
           </div>
           <div style={{
             fontSize: '18px',
@@ -54,19 +73,11 @@ function App() {
 
         <hr style={{ borderColor: '#333', margin: '20px 0' }} />
 
-        {/* Cloud Cover Slider */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px' }}>
-            Simulate Cloud Cover: <strong>{cloudCover}%</strong>
-          </label>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={cloudCover}
-            onChange={(e) => setCloudCover(Number(e.target.value))}
-            style={{ width: '100%' }}
-          />
+        {/* Live Weather Stats */}
+        <div style={{ marginBottom: '20px', display: 'flex', gap: '16px', color: '#ccc' }}>
+          <div>Clouds: <strong>{weather.cloudCover}%</strong></div>
+          <div>Rain: <strong>{weather.precipitationChance}%</strong></div>
+          <div>Temp: <strong>{weather.temperatureCelsius}°C ({weather.temperatureFarenheit}°F)</strong></div>
         </div>
 
         {/* Reasons & Notes */}

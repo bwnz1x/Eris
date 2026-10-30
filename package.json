@@ -12,6 +12,7 @@
   "dependencies": {
     "astronomy-engine": "^2.1.19",
     "lucide-react": "^1.64.0",
+    "openmeteo": "^1.2.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
