@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { WeatherInfo, MoonInfo } from './types/stargazing';
 import { calculateScore } from './utils/stargazingScorer';
 import { fetchWeather } from './services/weatherService';
+import Gauge from './component/Gauge';
 import './App.css'
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
         setLoading(false);
       });
   }, []);
-  
+
   const moon: MoonInfo = {
     currPhase: "Waxing Crescent",
     illumination: 0.15,
@@ -28,53 +29,41 @@ function App() {
   };
   if (loading || !weather) {
     return (
-      <main style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'sans-serif', padding: '20px' }}>
+      <main>
         <h1>Eris</h1>
-        <p style={{ color: '#aaa' }}>Scanning the skies for tonight's forecast...</p>
+        <p>Scanning the skies for tonight's forecast...</p>
       </main>
     );
   }
-  
+
   // Below this 'if', TypeScript now KNOWS weather is 100% not null!
-  
+
   const result = calculateScore(weather, moon);
 
-  
+
   return (
-    <main style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'sans-serif', padding: '20px' }}>
+    <main>
       <h1>Eris</h1>
-      <p style={{ color: '#888' }}>Tonight's Stargazing Forecast</p>
+      <p>Tonight's Stargazing Forecast</p>
+      <p>Location</p>
 
       {/* Score Card */}
-      <div style={{
-        background: '#1a1c23',
-        color: '#fff',
-        padding: '24px',
-        borderRadius: '16px',
-        border: '1px solid #333',
-        marginTop: '20px'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div>
+        <div>
           <div>
-            <div style={{ fontSize: '48px', fontWeight: 'bold' }}>{result.score}</div>
-            <div style={{ color: '#aaa', fontSize: '14px' }}>Stargazing Index</div>
+            <div>{result.score}</div>
+            <div>Stargazing Index</div>
           </div>
-          <div style={{
-            fontSize: '18px',
-            padding: '6px 16px',
-            borderRadius: '20px',
-            background: result.rating === 'Excellent' ? '#10b981' : '#f59e0b',
-            color: '#000',
-            fontWeight: 'bold'
-          }}>
+          <div>
             {result.rating}
           </div>
+          <Gauge value={result.score}></Gauge>
         </div>
 
-        <hr style={{ borderColor: '#333', margin: '20px 0' }} />
+        <hr />
 
         {/* Live Weather Stats */}
-        <div style={{ marginBottom: '20px', display: 'flex', gap: '16px', color: '#ccc' }}>
+        <div>
           <div>Clouds: <strong>{weather.cloudCover}%</strong></div>
           <div>Rain: <strong>{weather.precipitationChance}%</strong></div>
           <div>Temp: <strong>{weather.temperatureCelsius}°C ({weather.temperatureFarenheit}°F)</strong></div>
@@ -85,7 +74,7 @@ function App() {
           <h4>Sky Conditions:</h4>
           <ul>
             {result.summaryNote.map((note, index) => (
-              <li key={index} style={{ marginBottom: '4px' }}>{note}</li>
+              <li key={index}>{note}</li>
             ))}
           </ul>
         </div>

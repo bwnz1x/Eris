@@ -38,9 +38,7 @@ export async function fetchWeather(
     precipitationChance: weatherData.hourly.precipitation_probability![nightHour],
     cloudCover: weatherData.hourly.cloud_cover![nightHour],
     temperatureCelsius: Math.round(tempC),
-    temperatureFarenheit: Math.round(tempF)
-    
-    
+    temperatureFarenheit: Math.round(tempF)    
 }
 }
 
