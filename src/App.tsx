@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
-import type { WeatherInfo, MoonInfo } from './types/stargazing';
+import { type WeatherInfo, type MoonInfo, type LocationCoord } from './types/stargazing';
 import { calculateScore } from './utils/stargazingScorer';
 import { fetchWeather } from './services/weatherService';
 import Gauge from './component/Gauge';
 import './App.css'
+import SearchBox from './component/LocationSearch';
 
 function App() {
   const [weather, setWeather] = useState<WeatherInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState<LocationCoord>({
+    latitude: 49.2497,
+    longitude: -123.1193,
+    location_name: "Vancouver"
+  })
 
   useEffect(() => {
-    fetchWeather(49.2497, -123.1193)
+    fetchWeather(location.latitude, location.longitude)
       .then((data) => {
         setWeather(data);
         setLoading(false);
@@ -19,7 +25,7 @@ function App() {
         console.log(err);
         setLoading(false);
       });
-  }, []);
+  }, [location.latitude, location.longitude]);
 
   const moon: MoonInfo = {
     currPhase: "Waxing Crescent",
@@ -45,7 +51,7 @@ function App() {
     <main>
       <h1>Eris</h1>
       <p>Tonight's Stargazing Forecast</p>
-      <p>Location</p>
+      <p>Location: {location.location_name}</p>
 
       {/* Score Card */}
       <div>
@@ -59,7 +65,7 @@ function App() {
           </div>
           <Gauge value={result.score}></Gauge>
         </div>
-
+        <SearchBox onSelectLocation={setLocation} />
         <hr />
 
         {/* Live Weather Stats */}
