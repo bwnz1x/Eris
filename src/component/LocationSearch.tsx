@@ -32,24 +32,22 @@ function SearchBox(props: Props) {
 
   function handleSelect(city: LocationCoord) {
     props.onSelectLocation(city);
-    setQuery(city.location_name ?? "");
+    setQuery("");
     setIsOpen(false);
   }
 
   
   return (
     <div>
-      <input value={query}
+      <input type="text" value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter location..."
       />
-
       {isLoading && <div>Loading...</div>}
-
       {isOpen && (
         <ul>
           {results.map((city, index) => (
-            <li key={index} onClick={() => handleSelect(city)}>
+            <li key={index} onClick= {() => handleSelect(city)}>
               {city.location_name}
             </li>
           ))}
