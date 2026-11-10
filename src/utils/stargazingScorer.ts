@@ -1,4 +1,4 @@
-import type { WeatherInfo, MoonInfo, StargazingRating } from "../types/stargazing";
+import type { WeatherInfo,  MoonInfo, StargazingRating,  LightInfo } from "../types/stargazing";
 
 export interface Score {
   score: number;
@@ -21,7 +21,7 @@ function getRating(score: number): StargazingRating {
 
 
 // Main Score
-export function calculateScore(weather: WeatherInfo, moon: MoonInfo): Score {
+export function calculateScore(weather: WeatherInfo, moon: MoonInfo, light: LightInfo): Score {
   let score = 100;
   const notes: string[] = [];
 
@@ -44,14 +44,24 @@ export function calculateScore(weather: WeatherInfo, moon: MoonInfo): Score {
   }
 
   if (moon.illumination < 0.2) {
-    notes.push("Dark skies with minimal Moonlight");
+    notes.push("Minimal Moonlight");
   } else if (moon.illumination > 0.7) {
     score -= 20;
     notes.push("Heavy Moonlight")
   }
 
+  if (light.bortleClass <= 2) {
+    score += 10
+    notes.push("Dark skies")
+  } else if (light.bortleClass > 2 && light.bortleClass <= 6) {
+    notes.push("Fair skies")
+  } else {
+    score -= 15
+    notes.push("Heavy Light Pollution")
+  }
+
   const rating = getRating(score)
 
-  
+  score = Math.min(100, Math.max(0, score))
   return {score, rating, summaryNote: notes}
 }

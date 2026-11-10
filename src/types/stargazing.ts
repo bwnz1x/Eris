@@ -17,6 +17,10 @@ export interface WeatherInfo {
   temperatureCelsius: number;
   temperatureFarenheit: number;
 }
+export interface LightInfo {
+  sqmValue: number;
+  bortleClass: number;
+}
 
 export type StargazingRating = 'Excellent' | 'Great' | 'Good' | 'Fair' | 'Poor'
 
