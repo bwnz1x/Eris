@@ -69,13 +69,15 @@ function App() {
 
 
   return (
-    <main>
+    <main className='min-h-screen bg-slate-950 text-slate-100 px-4 py-8'>
+      <div className='mx-auto max-w-2xl space-y-6'>
       <h1>Eris</h1>
       <p>Tonight's Stargazing Forecast</p>
-      <p>Location: {location.location_name}</p>
+        <p>Location: {location.location_name}</p>
+        <SearchBox onSelectLocation={setLocation} />
 
       {/* Score Card */}
-      <div>
+      <div className='rounded-2xl border border-slate-50 bg-slate-900/80 p-6 shadow-xl space-y-6'>
         <div>
           <div>
             <div>{result.score}</div>
@@ -86,7 +88,6 @@ function App() {
           </div>
           <Gauge value={result.score}></Gauge>
         </div>
-        <SearchBox onSelectLocation={setLocation} />
         <hr />
 
         {/* Live Weather Stats */}
@@ -108,6 +109,7 @@ function App() {
           </ul>
         </div>
         <a href='https://darkskysites.com/'>Light Pollution API provided by darkskysites</a>
+        </div>
       </div>
     </main>
   );
